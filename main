@@ -1,0 +1,16 @@
+public class MS {
+
+    public static void main(String[] args) {
+        MultiSet<String> a = new MultiSet<String>();
+        MultiSet<String> b = new MultiSet<String>();
+
+        a.include("Foo");
+        a.include("Bar");
+        a.include("Foo");
+        System.out.println("a:" + a);
+
+        b.include("Bar");
+        b.include("Foo");
+        b.include("Bar");
+        b.include("Foo");
+        System.out.println("b:" + b);
