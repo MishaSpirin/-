@@ -1,0 +1,85 @@
+        import java.util.HashMap;
+        import java.util.Map;
+        import java.util.Map.Entry;
+
+/**
+ * Created by MiSha on 28.04.2017.
+ */
+public  class MultiSet<E> {
+    private HashMap<E, Integer> elems;
+    private int elementCount;
+
+    public MultiSet() {
+        elems = new HashMap<E, Integer>();
+        elementCount = 0;
+    }
+
+    public void include(E e) { // Додавання новго елемента по індексу
+        Integer i = elems.get(e);
+        if (i == null) i = 1;
+        else i = i + 1;
+        elems.put(e, i);
+        ++elementCount;
+    }
+
+    public void exclude(Object o) { // Вилучання елемента по індексу
+        Integer i = elems.get(o);
+        if (i == 1) {
+            elems.remove(o);
+        } else {
+            elems.put((E) o, i-1);
+        }
+        --elementCount;
+    }
+
+
+    public void swap(MultiSet<E> other){ // Перекидування значень з одного елеменда в інший
+        HashMap<E, Integer> result;
+        result = elems;
+        elems=other.elems;
+        other.elems=result;
+
+    }
+    public boolean isEmpty(){ // Перевіряє чи пусті елементи
+        if(elems.size() == 0)
+            return true;
+        else return false;
+    }
+    public boolean find(E element){ // Знаходе елемент в мультимножені
+        if(elems.containsKey(element))
+            return true;
+        else return false;
+    }
+
+    public int size() {  // Вивід кількості елементів
+        return elementCount;
+    }
+
+    public String acсumulate(){ // Додавання всіх елементів
+        String result = "";
+        for (Map.Entry<E, Integer> entry : elems.entrySet()) {
+            result += entry.getKey() + " ";
+        }
+        return result;
+    }
+
+    public boolean equals(Object other) { // Порівнювання елементів
+        if (other.getClass() != this.getClass()) return false;
+        return equalsMultiSet((MultiSet<?>) other);
+    }
+
+    @Override
+    public String toString() { // Для виведення на екран
+        String result = "";
+        for (Entry<E, Integer> entry : elems.entrySet()) {
+            result += "Елемент: " + entry.getKey() + " Кількість: " + entry.getValue() + "\n";
+        }
+
+        return result;
+    }
+    private <E> boolean equalsMultiSet(MultiSet<E> other) {
+        if (this == other) return true;
+        return this.elems.equals(other.elems);
+    }
+
+}
