@@ -1,16 +1,42 @@
 public class MS {
 
     public static void main(String[] args) {
-        MultiSet<String> a = new MultiSet<String>();
+        MultiSet<String> a = new MultiSet<String>(); // строворення обєкту
         MultiSet<String> b = new MultiSet<String>();
 
         a.include("Foo");
         a.include("Bar");
         a.include("Foo");
-        System.out.println("a:" + a);
+        System.out.println("a:" + a); // test toString
 
         b.include("Bar");
         b.include("Foo");
         b.include("Bar");
         b.include("Foo");
         System.out.println("b:" + b);
+
+        System.out.println(a.isEmpty());
+
+        a.swap(b);
+
+        System.out.println("a:" + a);
+        System.out.println("b:" + b);
+
+        a.size();
+
+        System.out.println(a.size());
+
+        a.equals(b);
+
+        System.out.println(a.equals(b));
+
+        System.out.println(a.find("Foo"));
+
+        a.exclude("Foo");
+        b.exclude("Bar");
+        System.out.println(a);
+        System.out.println(b);
+
+        System.out.println(a.acсumulate());
+    }
+}
