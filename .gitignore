@@ -1,12 +1,36 @@
-*.class
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+namespace ConsoleApp3
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int[,] a = new int[2, 2] { { 2, 1 }, { 2, 3 } };
+            
+            int[,] b = new int[2, 2] { { 1, 3 }, { 2, 1 } };
+            
 
-# Package Files #
-*.jar
-*.war
-*.ear
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int j = 0; j < b.Length; j++)
+                {
+                    int value = 0;
+                    for (int k = 0; k < b.Length; k++)
+                    {
+                        value += a[i][k] * b[k][j]; //←←←← Ось це я не можу виконати
+                        Console.WriteLine(value);
+                    }
+                }
+                Console.WriteLine();
+            }
+            Console.ReadLine();
+        }
+           
+        }
+    }
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
