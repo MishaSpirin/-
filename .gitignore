@@ -23,7 +23,7 @@ namespace ConsoleApp3
                     for (int k = 0; k < b.GetLength(1); k++)
                     {
                         res[i,j] = a[i,k] * b[j,k];
-                        Console.Write(" " + res);
+                        Console.Write(" " + res[i,j]);
                     }
                     Console.WriteLine();
                 }
