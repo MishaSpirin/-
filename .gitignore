@@ -21,27 +21,22 @@ namespace cfc
 
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private  void Form3_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private async void Form3_Load(object sender, EventArgs e)
-        {
-            string connetionString = (@"Data Source=D:\123\Personal 5\Kyrs.db; Version=5; New=True; Compress=True;");
-            sqliteConnection = new SQLiteConnection(connetionString);
-            await sqliteConnection.OpenAsync();
+            string connetionString = (@"Data Source=D:\123\VSCS\cfc\cfc\bin\Debug\x64\Kyrs.db;Version=3;New=True;Compress=True;");
+            sqliteConnection = new SQLiteConnection (connetionString);
+            sqliteConnection.Open();
 
             SQLiteDataReader sqliteReader = null;
-            SQLiteCommand command = new SQLiteCommand("SELECT * FROM [Cars]", sqliteConnection);
+            SQLiteCommand command = new SQLiteCommand(@"SELECT * FROM [Cars]", sqliteConnection);
 
-            try
+            try 
             {
-                sqliteReader =  await command.ExecuteReaderAsync();
+                sqliteReader = command.ExecuteReader();
 
-                while (await sqliteReader.ReadAsync())
+                while (sqliteReader.Read())
                 {
-                    listBox1.Items.Add(Convert.ToString(sqliteReader["id"]) + " " + Convert.ToString(sqliteReader["Marks"]) + " " + Convert.ToString(sqliteReader["Type_cars"]));
+                    listBox1.Items.Add(Convert.ToString(sqliteReader["Cars"]) + " " + Convert.ToString(sqliteReader["Marks"]) + " " + Convert.ToString(sqliteReader["Type_cars"]));
                 }
             }
             catch(Exception ex)
@@ -68,6 +63,8 @@ namespace cfc
             if (sqliteConnection != null && sqliteConnection.State != ConnectionState.Closed)
                 sqliteConnection.Close();
         }
+
+       
     }
 }
 
