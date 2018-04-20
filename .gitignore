@@ -2,69 +2,121 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SQLite;
 
-namespace cfc
+namespace MyChelsea
 {
-    public partial class Form3 : Form
+    public partial class Form1 : Form
     {
-        SQLiteConnection sqliteConnection;
+        SqlConnection sqlConnection;
 
-        public Form3()
+        public Form1()
         {
             InitializeComponent();
-
         }
 
-        private  void Form3_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
-            string connetionString = (@"Data Source=D:\123\VSCS\cfc\cfc\bin\Debug\x64\Kyrs.db;Version=3;New=True;Compress=True;");
-            sqliteConnection = new SQLiteConnection (connetionString);
-            sqliteConnection.Open();
+            string connectionString = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\123\Kursova\MyChelsea\MyChelsea\Database1.mdf;Integrated Security=True";
+            sqlConnection = new SqlConnection(connectionString);
 
-            SQLiteDataReader sqliteReader = null;
-            SQLiteCommand command = new SQLiteCommand(@"SELECT * FROM [Cars]", sqliteConnection);
+            await sqlConnection.OpenAsync();
 
-            try 
+            SqlDataReader sqlReader = null;
+
+            SqlCommand command = new SqlCommand("SELECT * FROM [Cars]", sqlConnection);
+
+            try
             {
-                sqliteReader = command.ExecuteReader();
+                sqlReader = await command.ExecuteReaderAsync();
 
-                while (sqliteReader.Read())
+                while (await sqlReader.ReadAsync())
                 {
-                    listBox1.Items.Add(Convert.ToString(sqliteReader["Cars"]) + " " + Convert.ToString(sqliteReader["Marks"]) + " " + Convert.ToString(sqliteReader["Type_cars"]));
+                    listBox1.Items.Add(Convert.ToString(sqlReader["Id"]) + "  " + Convert.ToString(sqlReader["Type_car"]) + "  " + Convert.ToString(sqlReader["Brands"]) + "  " + Convert.ToString(sqlReader["Number"]));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString(), ex.Source.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                if (sqliteReader != null)
-                    sqliteReader.Close();
-
-                
+                if (sqlReader != null)
+                    sqlReader.Close();
             }
         }
 
         private void вихідToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (sqliteConnection != null && sqliteConnection.State != ConnectionState.Closed)
-                sqliteConnection.Close();
+            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
+                sqlConnection.Close();
         }
 
-        private void Form3_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (sqliteConnection != null && sqliteConnection.State != ConnectionState.Closed)
-                sqliteConnection.Close();
+            if (sqlConnection != null && sqlConnection.State != ConnectionState.Closed)
+                sqlConnection.Close();
         }
 
-       
+        private async void button1_Click(object sender, EventArgs e)
+        {
+            if (label4.Visible)
+                label4.Visible = false;
+
+            if (!string.IsNullOrEmpty(textBox1.Text) && !string.IsNullOrWhiteSpace(textBox1.Text) &&
+                !string.IsNullOrEmpty(textBox2.Text) && !string.IsNullOrWhiteSpace(textBox2.Text) &&
+                !string.IsNullOrEmpty(textBox3.Text) && !string.IsNullOrWhiteSpace(textBox3.Text))
+                {
+
+                SqlCommand command = new SqlCommand("INSERT INTO [Cars] (Type_car, Brands, Number) Values( @Type_car, @Brands, @Number)", sqlConnection);
+
+                command.Parameters.AddWithValue("Type_car", textBox1.Text);
+
+                command.Parameters.AddWithValue("Brands", textBox2.Text);
+
+                command.Parameters.AddWithValue("Number", textBox3.Text);
+
+                await command.ExecuteNonQueryAsync();
+            }
+
+            else
+            {
+                label4.Visible = true;
+                label4.Text = "Поля 'Тип' 'Марка' і 'Номер' мають бути заповнені!";
+            }
+        }
+
+        private async void обновитиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            listBox1.Items.Clear();
+
+            SqlDataReader sqlReader = null;
+
+            SqlCommand command = new SqlCommand("SELECT * FROM [Cars]", sqlConnection);
+
+            try
+            {
+                sqlReader = await command.ExecuteReaderAsync();
+
+                while (await sqlReader.ReadAsync())
+                {
+                    listBox1.Items.Add(Convert.ToString(sqlReader["Id"]) + "  " + Convert.ToString(sqlReader["Type_car"]) + "  " + Convert.ToString(sqlReader["Brands"]) + "  " + Convert.ToString(sqlReader["Number"]));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), ex.Source.ToString(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (sqlReader != null)
+                    sqlReader.Close();
+            }
+        }
     }
 }
-
